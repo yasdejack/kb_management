@@ -1,0 +1,18 @@
+[build-system]
+requires = ['setuptools']
+build-backend = 'setuptools.build_meta'
+
+[project]
+name = 'msystem'
+version='2024.07.16'
+maintainers = [
+    {name = 'Jiacheng Shi', email = 'j.shi2@student.vu.nl'},
+]
+dynamic = ['dependencies']
+
+[tool.setuptools.dynamic]
+dependencies = {file = ['requirements.txt']}
+
+[tool.setuptools.packages.find]
+include = ['app01', 'app01.*','bms','bms.*']
+

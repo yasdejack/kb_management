@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Configure Jobs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://code.jquery.com/ui/1.10.3/themes/redmond/jquery-ui.css" rel="stylesheet" media="screen">
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/styles.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            height: 70vh;
+        }
+        .header {
+            height: 80px;
+        }
+        .page-content {
+            position: relative;
+            height: auto;
+            min-height: 100%;
+        }
+        .form-container {
+            background: #f7f7f7;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 65%;
+            height: 70vh;
+            margin: 0 auto;
+        }
+        .form-container .form-group {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        .form-container .form-control {
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .form-container .btn {
+            border-radius: 5px;
+            background-color: #2689aa;
+            border-color: #2689aa;
+            color: #fff;
+            font-size: 16px;
+        }
+        .form-container .btn:hover {
+            background-color: #2689aa;
+            border-color: #2689aa;
+        }
+        .form-container .dropdown-toggle {
+            border-radius: 5px;
+        }
+        .modal-header {
+            background-color: #2689aa;
+            color: #fff;
+            border-bottom: none;
+        }
+        .modal-footer {
+            border-top: none;
+            display: flex;
+            justify-content: center.
+        }
+        .modal-content {
+            border-radius: 10px;
+        }
+        .close {
+            color: #fff;
+        }
+        footer {
+            background: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="logo">
+                    <h1><a href="index.html">KB content management system</a></h1>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="input-group form">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="navbar navbar-inverse" role="banner">
+                    <nav class="collapse navbar-collapse bs-navbar-collapse navbar-right" role="navigation">
+                        <ul class="nav navbar-nav">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome, {{username}}<b class="caret"></b></a>
+                                <ul class="dropdown-menu animated fadeInUp">
+                                    <li><a href="/logout">Log out</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="page-content">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="sidebar content-box" style="display: block;">
+                <ul class="nav">
+                    <li><a href="/showkibana"><i class="glyphicon glyphicon-record"></i> Visualization Interface</a></li>
+                    <li class="current"><a href="/showtasks"><i class="glyphicon glyphicon-pencil"></i> Indexing Jobs</a></li>
+                    <li class="submenu">
+                        <a href="#">
+                            <i class="glyphicon glyphicon-list"></i> Configuration
+                            <span class="caret pull-right"></span>
+                        </a>
+                        <ul>
+                            <li><a href="/show_config">webpage search configuration</a></li>
+                            <li><a href="/show_notebook_config">notebook search configuration</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <div class="content-box-large form-container">
+                <h2>Please configure indexing jobs and submit</h2>
+                <form id="taskForm" action="/send_indextask/" method="post">
+                     {% csrf_token %}
+                    <div class="form-group">
+                        <label for="contenttype">select which content</label>
+                        <select class="form-control selectpicker" id="contenttype" name="contenttype">
+                            <option value="all">index all</option>
+                            <option value="webpage">web page</option>
+                            <option value="dataset">dataset</option>
+                            <option value="notebook">notebook</option>
+                            <option value="api">api</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="sub-category-group" style="display: none;">
+                        <label for="notebook">choose repository website</label>
+                        <select class="form-control selectpicker" id="notebook" name="notebook">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="period">select period</label>
+                        <select class="form-control selectpicker" id="period" name="period">
+                            <option value="now">now</option>
+                            <option value="week">every 2hours</option>
+                            <option value="month">every 30days</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+                <!-- 表格显示任务 -->
+                <h3 style="margin-top: 60px;">Current Tasks</h3>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Task ID</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="taskTableBody">
+                        {% for task in tasks %}
+                        <tr id="task-{{ task.task_id }}">
+                            <td>{{ task.task_id }}</td>
+                            <td class="status">{{ task.status }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 成功提示模态框 -->
+<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successModalLabel">Success</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Indexing job has been sent!
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 失败提示模态框 -->
+<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="errorModalLabel">Error</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="errorMessage">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="container">
+        <div class="copy text-center">
+            Copyright 2024 <a href='#'>Website</a>
+        </div>
+    </div>
+</footer>
+
+<link href="/static/vendors/datatables/dataTables.bootstrap.css" rel="stylesheet" media="screen">
+<script src="https://code.jquery.com/jquery.js"></script>
+<script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/js/bootstrap-select.min.js"></script>
+<script src="/static/vendors/datatables/js/jquery.dataTables.min.js"></script>
+<script src="/static/vendors/datatables/dataTables.bootstrap.js"></script>
+<script src="/static/js/custom.js"></script>
+<script src="/static/js/tables.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('.selectpicker').selectpicker();
+
+        $('#contenttype').change(function() {
+            var selectedCategory = $(this).val();
+            if (selectedCategory === 'notebook') {
+                $('#sub-category-group').show();
+                $('#notebook').html(`
+                    <option value="GitHub">Github</option>
+                    <option value="Kaggle">Kaggle</option>
+                    <option value="both">both</option>
+                `).selectpicker('refresh');
+            } else {
+                $('#sub-category-group').hide();
+                $('#sub-category').html('').selectpicker('refresh');
+            }
+        });
+
+        $('form').submit(function(event) {
+            event.preventDefault();
+
+            var formData = $(this).serialize();
+
+            $.post($(this).attr('action'), formData, function(response) {
+                if (response.success) {
+                    $('#successModal').modal('show');
+                } else {
+                   $('#errorMessage').text(response.error || 'An error occurred. Please try again.');
+                   $('#errorModal').modal('show');
+                }
+            });
+        });
+
+        // WebSocket
+         var socket = new WebSocket("ws:localhost:8001/tasks/");
+
+        socket.onopen = function(e) {
+        console.log("WebSocket connection established");
+        };
+
+        socket.onmessage = function(e) {
+            fetchTasks();
+        };
+
+        function fetchTasks() {
+            $.get("/get_tasks/", function(data) {
+                var tasks = data.tasks;
+                var taskTableBody = $("#taskTableBody");
+                taskTableBody.empty();
+                tasks.forEach(function(task) {
+                    var row = `<tr id="task-${task.task_id}">
+                                   <td>${task.task_id}</td>
+                                   <td class="status">${task.status}</td>
+                               </tr>`;
+                    taskTableBody.append(row);
+                });
+            });
+        }
+
+        fetchTasks();
+    });
+</script>
+</body>
+</html>

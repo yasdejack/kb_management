@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>CSV Editor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- jQuery UI -->
+    <link href="https://code.jquery.com/ui/1.10.3/themes/redmond/jquery-ui.css" rel="stylesheet" media="screen">
+    <!-- Bootstrap -->
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- styles -->
+    <link href="/static/css/styles.css" rel="stylesheet">
+    <style>
+
+         .header {
+            height: 80px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        input[type="text"] {
+            width: 100%;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5">
+                <!-- Logo -->
+                <div class="logo">
+                    <h1><a href="index.html">KB content management system</a></h1>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="input-group form">
+<!--                            <input type="text" class="form-control" placeholder="Search...">-->
+<!--                            <span class="input-group-btn">-->
+<!--                                <button class="btn btn-primary" type="button"></button>-->
+<!--                            </span>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="navbar navbar-inverse" role="banner">
+                    <nav class="collapse navbar-collapse bs-navbar-collapse navbar-right" role="navigation">
+                        <ul class="nav navbar-nav">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">welcome, {{ username }}<b class="caret"></b></a>
+                                <ul class="dropdown-menu animated fadeInUp">
+                                    <li><a href="/logout">Log out</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="page-content">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="sidebar content-box" style="display: block;">
+                <ul class="nav">
+                    <!-- Main menu -->
+                    <li><a href="/showkibana"><i class="glyphicon glyphicon-record"></i> Visualization Interface</a></li>
+                    <li><a href="/showtasks"><i class="glyphicon glyphicon-pencil"></i> Indexing Job</a></li>
+                    <li class="submenu">
+                        <a href="#">
+                            <i class="glyphicon glyphicon-list"></i> Configuration
+                            <span class="caret pull-right"></span>
+                        </a>
+                        <!-- Sub menu -->
+                        <ul>
+                            <li><a href="/show_config">Indexing workflows configuration</a></li>
+                            <li><a href="/show_notebook_config">Notebook search configuration</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <div class="content-box-large">
+                <div class="panel-heading">
+                    <h2 class="panel-title">CSV File Editor</h2>
+                </div>
+                <div class="panel-body">
+                    <p>File name: {{ file_name }}</p>
+                    <p>Last edited time: {{ last_modified }}</p>
+                    <p>Last editor: {{ modified_by }}</p>
+                    <form id="csvForm">
+                        <table id="csv-table">
+                            <thead>
+                                <tr id="csv-header"></tr>
+                            </thead>
+                            <tbody id="csv-body"></tbody>
+                        </table>
+                        <br>
+                        <button type="submit" class="btn btn-primary">Save & Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="container">
+        <div class="copy text-center">
+            Copyright 2024 <a href='#'>Website</a>
+        </div>
+    </div>
+</footer>
+
+<link href="/static/vendors/datatables/dataTables.bootstrap.css" rel="stylesheet" media="screen">
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://code.jquery.com/jquery.js"></script>
+<!-- jQuery UI -->
+<script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+<script>
+    // 初始化表格数据
+    const csvData = {{ csv_data|safe }};
+    const tableHeader = document.getElementById('csv-header');
+    const tableBody = document.getElementById('csv-body');
+
+    function createTable(data) {
+        // Create header
+        const headerRow = document.createElement('tr');
+        data[0].forEach(cell => {
+            const th = document.createElement('th');
+            th.textContent = cell;
+            headerRow.appendChild(th);
+        });
+        tableHeader.appendChild(headerRow);
+
+        // Create body
+        for (let i = 1; i < data.length; i++) {
+            const row = document.createElement('tr');
+            data[i].forEach(cell => {
+                const td = document.createElement('td');
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.value = cell;
+                td.appendChild(input);
+                row.appendChild(td);
+            });
+            tableBody.appendChild(row);
+        }
+    }
+
+    function saveCSV() {
+        const rows = tableBody.querySelectorAll('tr');
+        const csv = [];
+
+        // 获取头部数据
+        const headerCells = tableHeader.querySelectorAll('th');
+        const headerRow = [];
+        headerCells.forEach(cell => {
+            headerRow.push(cell.textContent);
+        });
+        csv.push(headerRow);
+
+        // 获取主体数据
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td input');
+            const rowData = [];
+            cells.forEach(cell => {
+                rowData.push(cell.value);
+            });
+            csv.push(rowData);
+        });
+
+        const csvContent = csv.map(e => e.join(",")).join("\n");
+
+        fetch(window.location.href, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ file_name: '{{ file_name }}', content: csvContent })
+        }).then(response => {
+            if (response.ok) {
+                alert('CSV updated!');
+            } else {
+                response.json().then(data => {
+                    alert('Error: ' + data.error);
+                });
+            }
+        });
+    }
+
+    document.getElementById('csvForm').onsubmit = function(e) {
+        e.preventDefault();
+        saveCSV();
+    };
+
+    createTable(csvData);
+
+    // 确保子菜单正常展开
+    $('.submenu > a').click(function(e) {
+        e.preventDefault();
+        var $li = $(this).parent('li');
+        var $ul = $(this).next('ul');
+
+        if ($li.hasClass('open')) {
+            $ul.slideUp(350);
+            $li.removeClass('open');
+        } else {
+            $('.nav > li > ul').slideUp(350);
+            $('.nav > li').removeClass('open');
+            $ul.slideDown(350);
+            $li.addClass('open');
+        }
+    });
+</script>
+</body>
+</html>

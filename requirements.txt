@@ -1,0 +1,9 @@
+Django==3.2
+pymysql==1.0.2
+schedule==1.2.1
+requests
+django-apscheduler==0.3.1
+channels==3.0.5
+elasticsearch==7.17.6
+
+
