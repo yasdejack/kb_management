@@ -15,7 +15,3 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bms.settings')
 
 application = get_wsgi_application()
 
-
-# print('i am here to mark the 开始之前')
-# start_scheduler()
-# print("APScheduler started")
