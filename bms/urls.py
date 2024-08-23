@@ -25,11 +25,11 @@ urlpatterns = [
     url(r'^$', views.login_view),
     url(r'^showtasks/',views.showtasks),
     url(r'^showkibana/',views.showkibana),
-    url(r'^send_indextask/',views.sendingconfiguredtasks),  ##  发送任务
-    url(r'^login/', views.login_view),     # 登录动作
+    url(r'^send_indextask/',views.sendingconfiguredtasks),  
+    url(r'^login/', views.login_view),     
     url(r'^logout/', views.logout_view),
-    url(r'^signup/', views.register),     # 注册页面
-    url(r'^register/', views.register),     # 注册
+    url(r'^signup/', views.register),     
+    url(r'^register/', views.register),     
     url(r'^delete_document/',views.delete_document),
     url(r'^show_config/',views.show_config),
     url(r'^show_notebook_config/',views.show_notebook_config),
