@@ -13,7 +13,6 @@ warnings.simplefilter('ignore', ElasticsearchWarning)
 
 def create_es_client(hosts, username, password):
 
-    # 连接到Elasticsearch
     es = Elasticsearch(
         hosts,
         http_auth=(username, password),
