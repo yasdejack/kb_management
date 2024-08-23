@@ -343,7 +343,7 @@ def show_notebook_config(request):
         content = data['content']
 
         csv_file = get_object_or_404(CSVFile, name=file_name)
-        csv_file.content = content
+        csv_file.data = content
         csv_file.modified_by = request.user.username if request.user.is_authenticated else 'unknown'
         csv_file.save()
 
