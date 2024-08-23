@@ -29,9 +29,6 @@ scheduler.add_jobstore(DjangoJobStore(),"default")
 
 
 
-
-# 1.登录
-
 def login_view(request):
     error_message = None
 
@@ -104,12 +101,12 @@ def update_task_status(request):
                 task.status = status
                 task.save()
             except RunningTask.DoesNotExist:
-                # 如果任务不存在，则创建一个新的任务
+                # if not exist, create a new task
                 task = RunningTask(
                     task_id=task_id,
                     status=status,
-                    contenttype=content,  # 根据实际情况设置
-                    org=org,  # 根据实际情况设置
+                    contenttype=content,  
+                    org=org, 
                     repo=repo,
                     start_time=timezone.now()
                 )
@@ -244,8 +241,6 @@ def organization_dashboard(request):
 
 
 
-
-# 删除documents
 def delete_document(request):
     if request.method == 'POST':
         data = json.loads(request.body)
