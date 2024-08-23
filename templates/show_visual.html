@@ -31,7 +31,7 @@
         }
 
         .panel-body {
-            margin-bottom: 20px; /* 增加下边距 */
+            margin-bottom: 20px; 
         }
 
         .selectpicker,
@@ -41,7 +41,7 @@
         }
 
         .input-group {
-            width: 250px; /* 设置下拉框和输入框的宽度 */
+            width: 250px; 
             margin-bottom: 20px;
         }
 
@@ -49,10 +49,6 @@
             width: 90px;
         }
 
-        /*.form-group {*/
-        /*    display: flex;*/
-        /*    align-items: center; !* 确保所有元素垂直居中 *!*/
-        /*}*/
     </style>
 </head>
 <body>
@@ -200,7 +196,7 @@ $(document).ready(function() {
         var indexName = $('#indexSelect').val();
         var documentId = $('#documentId').val();
         if (indexName && documentId) {
-            if (confirm('确定要删除这个文档吗？')) {
+            if (confirm('Are you sure deleting this document？')) {
                 $.ajax({
                     url: '/delete_document/',
                     type: 'POST',
@@ -214,18 +210,18 @@ $(document).ready(function() {
                     },
                     success: function(response) {
                         if (response.result === 'success') {
-                            alert('文档已成功删除');
+                            alert('This document has been deleted!');
                         } else {
-                            alert('删除文档时出错: ' + response.message);
+                            alert('errors when deleting: ' + response.message);
                         }
                     },
                     error: function() {
-                        alert('删除文档时出错');
+                        alert('errors!');
                     }
                 });
             }
         } else {
-            alert('请选择索引并输入文档ID');
+            alert('please choose content type and type in document ID');
         }
     });
 });
