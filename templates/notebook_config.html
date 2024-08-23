@@ -136,7 +136,6 @@
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
 <script>
-    // 初始化表格数据
     const csvData = {{ csv_data|safe }};
     const tableHeader = document.getElementById('csv-header');
     const tableBody = document.getElementById('csv-body');
@@ -170,7 +169,7 @@
         const rows = tableBody.querySelectorAll('tr');
         const csv = [];
 
-        // 获取头部数据
+
         const headerCells = tableHeader.querySelectorAll('th');
         const headerRow = [];
         headerCells.forEach(cell => {
@@ -178,7 +177,7 @@
         });
         csv.push(headerRow);
 
-        // 获取主体数据
+
         rows.forEach(row => {
             const cells = row.querySelectorAll('td input');
             const rowData = [];
@@ -215,7 +214,7 @@
 
     createTable(csvData);
 
-    // 确保子菜单正常展开
+
     $('.submenu > a').click(function(e) {
         e.preventDefault();
         var $li = $(this).parent('li');
