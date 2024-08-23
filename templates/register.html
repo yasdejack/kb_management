@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>图书管理系统</title>
+	<title>KB management sys</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<!-- jQuery UI -->
 	<link href="https://code.jquery.com/ui/1.10.3/themes/redmond/jquery-ui.css" rel="stylesheet" media="screen">
@@ -26,7 +26,7 @@
 	           <div class="col-md-12">
 	              <!-- Logo -->
 	              <div class="logo">
-	                 <h1><a href="index.html">图书管理系统</a></h1>
+	                 <h1><a href="index.html">KB management sys</a></h1>
 	              </div>
 	           </div>
 	        </div>
@@ -39,7 +39,7 @@
 				<div class="login-wrapper">
 			        <div class="box">
 			            <form class="content-wrap" role="form" action="/register/" method="post">
-			                <h6>注册</h6>
+			                <h6>register</h6>
 								{% csrf_token %}
 			                <input class="form-control" name="username" type="text" placeholder="Username">
 			                <input class="form-control" name="email" type="text" placeholder="E-mail address">
@@ -47,12 +47,12 @@
 			                <input class="form-control" name="mobile" type="text" placeholder="Mobile">
 <!--			                <input class="form-control" type="password" placeholder="Confirm Password">-->
 								<div class="action">
-									<button type="submit" class="btn btn-primary">注册</button>
+									<button type="submit" class="btn btn-primary">register</button>
 								</div>
 							</form>
 			        <div class="already">
-			            <p>已有账户?</p>
-			            <a href="/login">登录</a>
+			            <p>already have an account?</p>
+			            <a href="/login">login</a>
 			        </div>
 					</div>
 			    </div>
