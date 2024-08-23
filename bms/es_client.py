@@ -12,10 +12,6 @@ warnings.simplefilter('ignore', ElasticsearchWarning)
 
 
 def create_es_client(hosts, username, password):
-    # 创建SSL上下文，禁用证书验证
-    # context = create_ssl_context()
-    # context.check_hostname = False
-    # context.verify_mode = ssl.CERT_NONE
 
     # 连接到Elasticsearch
     es = Elasticsearch(
@@ -28,15 +24,12 @@ def create_es_client(hosts, username, password):
 
 
 def main():
-    # Elasticsearch连接信息
-    hosts = ['https://elasticsearch:9200']  # 替换为你的Elasticsearch地址
-    username = 'elastic'  # 替换为你的用户名
-    password = 'changeme'  # 替换为你的密码
+    hosts = ['https://elasticsearch:9200']  #replace to your host
+    username = 'elastic'  #replace
+    password = 'changeme'  #replace
 
-    # 创建Elasticsearch客户端
     es = create_es_client(hosts, username, password)
 
-    # 测试连接
     try:
         info = es.info()
         print("Connected to Elasticsearch")
