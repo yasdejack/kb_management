@@ -198,18 +198,18 @@ def sendingconfiguredtasks(request):
                     schedule_new_job(scheduler, 720, all, org, None)
                     jobindexall(org)
                 elif period == 'week':
-                    schedule_new_job(scheduler, 2, all, org, None)
+                    schedule_new_job(scheduler, 168, all, org, None)
                     jobindexall(org)
                 else:
                     jobindexall(org)
 
-            # 单种资源执行
+            # one asset
             else:
                 if period == 'month':
                     schedule_new_job(scheduler, 720, contenttype, org, repo)
                     jobindex(contenttype, org, repo)
                 elif period == 'week':
-                    schedule_new_job(scheduler, 2, contenttype, org, repo)
+                    schedule_new_job(scheduler, 168, contenttype, org, repo)
                     jobindex(contenttype, org, repo)
                 else:
                     jobindex(contenttype, org, repo)
