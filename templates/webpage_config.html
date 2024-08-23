@@ -34,7 +34,7 @@
         .CodeMirror {
             border: 1px solid #eee;
             height: auto;
-            color: black; /* 设置默认字体颜色为黑色 */ !important;
+            color: black; !important;
     }
         }
 
@@ -152,7 +152,7 @@
 <script src="/static/js/custom.js"></script>
 <script src="/static/js/tables.js"></script>
 <script>
-    // 注册 JSONLint 作为 CodeMirror 的 Linting 工具
+    
     CodeMirror.registerHelper("lint", "application/json", function(text) {
         var found = [];
         if (!window.jsonlint) return found;
@@ -170,7 +170,6 @@
         return found;
     });
 
-    // 初始化 CodeMirror
     var editor = CodeMirror.fromTextArea(document.getElementById('jsonEditor'), {
         mode: 'application/json',
         lineNumbers: true,
@@ -179,7 +178,6 @@
         lint: true
     });
 
-    // 提交表单时处理请求
     document.getElementById('jsonForm').onsubmit = function(e) {
         e.preventDefault();
         fetch(window.location.href, {
